@@ -8,6 +8,8 @@ namespace AgregatorM3.ConsoleApp
 {
     class Program
     {
+        private static HttpClient client = new HttpClient();
+
         static void Main(string[] args)
         {
             var priceMin = 400000;
@@ -44,8 +46,8 @@ namespace AgregatorM3.ConsoleApp
                 string domImportaUrl = String.Concat("https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/", locationList[i], 
                     "?Surface.From=55&Surface.To=110&Price.From=400000&Price.To=900000&Rooms.From=3&Rooms.To=4&PricePerMeter.To=13000");
 
-                var client = new HttpClient();
                 var response = await client.GetAsync(domImportaUrl);
+                if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Znaleziono 0 ogłoszeń")) continue;
@@ -84,8 +86,8 @@ namespace AgregatorM3.ConsoleApp
                 string gumtreeUrl    = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
                     "q=", locationList[i], "&pr=", priceMin, ",", priceMax,"&df=ownr&nr=3");
 
-                var client = new HttpClient();
                 var response = await client.GetAsync(gumtreeUrl);
+                if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Niestety, nie znaleźliśmy żadnych wyników. Szukając ogłoszeń skorzystaj z poniższych sugestii.")) continue;
