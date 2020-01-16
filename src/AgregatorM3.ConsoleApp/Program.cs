@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using System.IO;
+using System.Linq;
 
 namespace AgregatorM3.ConsoleApp
 {
     class Program
     {
         private static HttpClient client = new HttpClient();
+        private static List<string> seenAdverts = ReadSeenData();
 
         static void Main(string[] args)
         {
@@ -25,10 +28,18 @@ namespace AgregatorM3.ConsoleApp
             Console.ReadKey();
         }
 
+        static List<string> ReadSeenData()
+        {
+            string textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.ConsoleApp\seen.txt";
+            string[] lines = File.ReadAllLines(textFile);
+
+            return lines.OfType<string>().ToList();
+        }
+
         public static async Task Domimporta(int priceMin, int priceMax)
         {
             var locationList = new List<string>{
-                "aleksandra-wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
+                "aleksandra -wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
                 "lenartowicza-teofila","adama-naruszewicza", "krasickiego-ignacego", "ursynowska", "broniwoja",
                 "woronicza", "tyniecka", "szarotki", "konduktorkska", "fryderyka-joliot-curie","gandhiego-mahatmy",
                 "janka-bytnara-rudego", "bukietowa", "zygmunta-modzelewskiego", "oskara-kolberga", "piaseczynska",
@@ -40,6 +51,8 @@ namespace AgregatorM3.ConsoleApp
                 "bielawska", "wielicka", "kazimierzowska", "odolanska", "lewicka", "kwiatowa", "wrotkowa", "raclawicka",
                 "szczekocinska", "wybieg", "pilkarska", "sloneczna", "olszewska", "chocimska", "michala-baluckiego"
             };
+
+            var resultsList = new List<string>();
 
             for (int i = 0; i < locationList.Count; i++)
             {
@@ -59,7 +72,12 @@ namespace AgregatorM3.ConsoleApp
                     SelectNodes("//main/div/div/div/div/div/div[@class='listing__container']/div/ul/li/article");
                 foreach (var node in nodes)
                 {
-                    Console.WriteLine($"{locationList[i]}: https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}");
+                    var linkResult = $"https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}";
+                    if (!resultsList.Contains(linkResult) && !seenAdverts.Contains(linkResult))
+                    {
+                        resultsList.Add(linkResult);
+                        Console.WriteLine($"{locationList[i]}: {linkResult}");
+                    }
                 }
             }
         }
@@ -101,13 +119,15 @@ namespace AgregatorM3.ConsoleApp
                 foreach (var node in nodes)
                 {
                     var linkResult = $"https://www.gumtree.pl{node.GetAttributeValue("href", "incorrect htmlNode query")}";
-                    if (!resultsList.Contains(linkResult))
+                    if (!resultsList.Contains(linkResult) && !seenAdverts.Contains(linkResult))
                     {
                         resultsList.Add(linkResult);
                         Console.WriteLine($"{locationList[i]}: {linkResult}");
                     }
                 }
             }
+
+           
         }
     }
 }
