@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<string>
+
+<div>
+    @foreach (var url in Model)
+    {
+        <div><a href="@url" target="_blank"></a>@url</div>
+    }
+</div>
