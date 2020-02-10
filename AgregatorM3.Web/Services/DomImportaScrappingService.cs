@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using HtmlAgilityPack;
@@ -9,9 +8,9 @@ namespace AgregatorM3.Web.Services
 {
     public class DomImportaScrappingService : IScrappingService
     {
-        HttpClient client = new HttpClient();
+        private readonly HttpClient client = new HttpClient();
 
-        public async Task<List<string>> GetAddresses(int priceMin, int priceMax)
+        public async Task<List<string>> GetData(int priceMin, int priceMax)
         {
             var locationList = new List<string>{
                 "aleksandra -wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
