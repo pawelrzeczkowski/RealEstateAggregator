@@ -15,15 +15,15 @@ namespace AgregatorM3.Web.Services
         {
             var locationList = new List<string>{
                 "wejnerta", "goszczyńskiego", "malczewskiego","pilicka", "widok+na+miasto", "panorama+miasta", "panorama+warszawy",
-                "lenartowicza","naruszewicza", "krasickiego", "ursynowska", "broniwoja",
-                "woronicza", "tyniecka", "szarotki", "konduktorkska", "joliot+curie","gandhiego",
-                "bytnara", "bukietowa", "modzelewskiego", "kolberga", "piaseczyńska", "stacja+metra","pole+mokotowskie","marzanny",
-                "boryszewska", "belgijska", "dworkowa", "morskie+oko", "rozana", "madalinskiego", "ludwika-narbutta",
-                "wisniowa", "rejtana", "bruna", "sandomierska", "łowicka", "kielecka", "opoczyńska", "asfaltowa", "falata",
-                "akacjowa", "balladyny", "dabrowskiego", "wiktorska", "gimnastyczna", "bełska", "garażowa",
-                "samochodowa", "domaniewska", "lutocińska", "ksawerów", "abramowskiego", "żywnego",
-                "bielawska", "wielicka", "kazimierzowska", "odolańska", "lewicka", "kwiatowa", "wrotkowa", "racławicka",
-                "szczekocińska", "wybieg", "piłkarska", "słoneczna", "olszewska", "chocimska", "bałuckiego"
+                //"lenartowicza","naruszewicza", "krasickiego", "ursynowska", "broniwoja",
+                //"woronicza", "tyniecka", "szarotki", "konduktorkska", "joliot+curie","gandhiego",
+                //"bytnara", "bukietowa", "modzelewskiego", "kolberga", "piaseczyńska", "stacja+metra","pole+mokotowskie","marzanny",
+                //"boryszewska", "belgijska", "dworkowa", "morskie+oko", "rozana", "madalinskiego", "ludwika-narbutta",
+                //"wisniowa", "rejtana", "bruna", "sandomierska", "łowicka", "kielecka", "opoczyńska", "asfaltowa", "falata",
+                //"akacjowa", "balladyny", "dabrowskiego", "wiktorska", "gimnastyczna", "bełska", "garażowa",
+                //"samochodowa", "domaniewska", "lutocińska", "ksawerów", "abramowskiego", "żywnego",
+                //"bielawska", "wielicka", "kazimierzowska", "odolańska", "lewicka", "kwiatowa", "wrotkowa", "racławicka",
+                //"szczekocińska", "wybieg", "piłkarska", "słoneczna", "olszewska", "chocimska", "bałuckiego"
             };
 
             var resultsList = new List<string>();

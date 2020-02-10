@@ -30,7 +30,8 @@ namespace AgregatorM3.Web
         {
             // Add framework services.
             services.AddMvc();
-            services.AddScoped<IScrappingService, DomImportaScrappingService>();
+            services.AddTransient<IScrappingService, DomImportaScrappingService>();
+            services.AddTransient<IScrappingService, GumtreeScrappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

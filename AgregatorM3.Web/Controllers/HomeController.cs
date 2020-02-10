@@ -11,24 +11,25 @@ namespace AgregatorM3.Web.Controllers
 {
     public class HomeController : Controller
     {
-       // private static HttpClient client = new HttpClient();
        // private static List<string> seenAdverts = ReadSeenData();
-        private readonly IScrappingService _domImportaService;
+        private readonly IEnumerable<IScrappingService> _scrappingServices;
 
-        public HomeController(IScrappingService scrappingService)
+        public HomeController(IEnumerable<IScrappingService> scrappingServices)
         {
-            _domImportaService = scrappingService;
+            _scrappingServices = scrappingServices;
         }
 
         public async Task<IActionResult> Index()
         {
             // USE ASYNC STREAMS
-
+            var result = new List<string>();
             var priceMin = 500000;
             var priceMax = 950000;
 
-            var result = await _domImportaService.GetData(priceMin, priceMax);
-               // Gumtree(priceMin, priceMax, seenAdverts);
+            foreach (var service in _scrappingServices)
+            {
+                result.AddRange(await service.GetData(priceMin, priceMax));
+            }
 
             return View(result);
         }
