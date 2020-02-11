@@ -31,7 +31,7 @@ namespace AgregatorM3.Web.Services
             for (int i = 0; i < locationList.Count; i++)
             {
                 string gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
-                    "q=", locationList[i], "&pr=", priceMin, ",", priceMax, "&df=ownr&nr=3");
+                    "q=", locationList[i], "&pr=", priceMin, ",", priceMax); // for private only add "&df=ownr&nr=3"
 
                 var response = await client.GetAsync(gumtreeUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
