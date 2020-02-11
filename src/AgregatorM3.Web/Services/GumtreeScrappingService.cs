@@ -27,11 +27,10 @@ namespace AgregatorM3.Web.Services
             };
 
             var resultsList = new List<string>();
-
-            for (int i = 0; i < locationList.Count; i++)
+            foreach (var location in locationList)
             {
-                string gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
-                    "q=", locationList[i], "&pr=", priceMin, ",", priceMax); // for private only add "&df=ownr&nr=3"
+                var gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
+                    "q=", location, "&pr=", priceMin, ",", priceMax); // for private only add "&df=ownr&nr=3"
 
                 var response = await client.GetAsync(gumtreeUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");

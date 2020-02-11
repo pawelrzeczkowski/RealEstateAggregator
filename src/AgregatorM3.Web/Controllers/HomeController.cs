@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AgregatorM3.Web.Services;
@@ -33,10 +35,17 @@ namespace AgregatorM3.Web.Controllers
 
         private static List<string> ReadSeenData()
         {
-            string textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.ConsoleApp\seen.txt";
-            string[] lines = System.IO.File.ReadAllLines(textFile);
+            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\seen.txt";
+            var lines = System.IO.File.ReadAllLines(textFile);
 
             return lines.OfType<string>().ToList();
+        }
+
+        public IActionResult AddToBlacklist(string link)
+        {
+            System.IO.File.AppendAllText("blacklist.txt", link + Environment.NewLine);
+
+            return Ok();
         }
     }
 }

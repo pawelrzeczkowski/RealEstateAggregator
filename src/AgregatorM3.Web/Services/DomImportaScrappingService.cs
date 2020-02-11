@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using HtmlAgilityPack;
@@ -14,8 +15,8 @@ namespace AgregatorM3.Web.Services
         {
             var locationList = new List<string>{
                 "aleksandra -wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
-                "lenartowicza-teofila","adama-naruszewicza", "krasickiego-ignacego", "ursynowska", "broniwoja",
-                "woronicza", "tyniecka", "szarotki", "konduktorkska", "fryderyka-joliot-curie","gandhiego-mahatmy",
+                //"lenartowicza-teofila","adama-naruszewicza", "krasickiego-ignacego", "ursynowska", "broniwoja",
+                //"woronicza", "tyniecka", "szarotki", "konduktorkska", "fryderyka-joliot-curie","gandhiego-mahatmy",
                 //"janka-bytnara-rudego", "bukietowa", "zygmunta-modzelewskiego", "oskara-kolberga", "piaseczynska",
                 //"kolberga-oskara", "wierzbno-stacja-metra", "pole-mokotowskie-stacja-metra","okecka","marzanny",
                 //"boryszewska", "belgijska", "dworkowa", "morskie oko", "rozana", "madalinskiego", "ludwika-narbutta",
@@ -27,11 +28,10 @@ namespace AgregatorM3.Web.Services
             };
 
             var resultsList = new List<string>();
-
-            for (int i = 0; i < locationList.Count; i++)
+            foreach (var location in locationList)
             {
-                string domImportaUrl = String.Concat("https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/", locationList[i],
-                    "?Surface.From=55&Surface.To=110&Price.From=400000&Price.To=900000&Rooms.From=3&Rooms.To=4&PricePerMeter.To=13000");
+                var domImportaUrl = $"https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/{location}?Surface.From=55&Surface.To=110&Price.From=" +
+                                    $"{priceMin}&Price.To={priceMax}&Rooms.From=3&Rooms.To=4&PricePerMeter.To=13000";
 
                 var response = await client.GetAsync(domImportaUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
@@ -44,11 +44,7 @@ namespace AgregatorM3.Web.Services
                 htmDocument.LoadHtml(content);
                 var nodes = htmDocument.DocumentNode.
                     SelectNodes("//main/div/div/div/div/div/div[@class='listing__container']/div/ul/li/article");
-                foreach (var node in nodes)
-                {
-                    var linkResult = $"https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}";
-                    resultsList.Add(linkResult);
-                }
+                resultsList.AddRange(nodes.Select(node => $"https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}"));
             }
 
             return resultsList;

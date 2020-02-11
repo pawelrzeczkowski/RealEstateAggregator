@@ -4,9 +4,22 @@
 
 @model List<string>
 
-<div>
-    @foreach (var url in Model)
-    {
-        <div><a href="@url" target="_blank">@url</a></div>
-    }
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" class="col-xs-9">LINK</th>
+            <th scope="col" class="col-xs-3">Blacklist</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var url in Model)
+        {
+            <tr>
+                <td><a href="@url" target="_blank">@url</a></td>
+                <td>@Html.ActionLink("remove", "AddToBlacklist", "Home", new { link = @url }, null)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
