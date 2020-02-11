@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26228.57
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgregatorM3.ConsoleApp", "src\AgregatorM3.ConsoleApp\AgregatorM3.ConsoleApp.csproj", "{28033A3A-D8D3-4D63-9A5D-B229D60F50D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgregatorM3.Web", "AgregatorM3.Web\AgregatorM3.Web.csproj", "{AF335AB4-47D7-4B13-ABB9-BDC5C2AE7982}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgregatorM3.Web", "src\AgregatorM3.Web\AgregatorM3.Web.csproj", "{AF335AB4-47D7-4B13-ABB9-BDC5C2AE7982}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
