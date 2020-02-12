@@ -19,7 +19,7 @@ namespace AgregatorM3.ConsoleApp
             var priceMin = 700000;
             var priceMax = 950000;
 
-            Komornik();
+            //await Komornik();
 
             Task.WaitAll(
                 Domimporta(priceMin, priceMax),
