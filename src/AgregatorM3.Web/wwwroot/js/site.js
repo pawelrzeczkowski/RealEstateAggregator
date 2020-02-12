@@ -1,10 +1,11 @@
 ﻿var addToBlackList = function (item) {
-    var itemToRemove = item;
+    var dataToPost = '{item: "' + item + '" }';
     $.ajax({
-        url: '/home/AddToBlacklist',
+        url: '/home/blackList',
         type: 'POST',
-        data: JSON.stringify({ 'item': itemToRemove }),
-        contentType: "application/json"
+        data: dataToPost,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
 });
 };
 

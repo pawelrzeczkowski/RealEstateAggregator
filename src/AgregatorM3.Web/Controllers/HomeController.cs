@@ -21,19 +21,22 @@ namespace AgregatorM3.Web.Controllers
         public async Task<IActionResult> Index()
         {
             // USE ASYNC STREAMS
-            var result = new List<string>();
+            var resultList = new List<string>();
             var priceMin = 500000;
             var priceMax = 950000;
 
             foreach (var service in _scrappingServices)
             {
-                result.AddRange(await service.GetData(priceMin, priceMax));
+                resultList.AddRange(await service.GetData(priceMin, priceMax));
             }
 
-            return View(result);
+            var blackList = GetBlackList();
+            resultList = resultList.Except(blackList).ToList();
+
+            return View(resultList);
         }
 
-        private static List<string> ReadSeenData()
+        private static List<string> GetBlackList()
         {
             var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\blacklist.txt";
             var lines = System.IO.File.ReadAllLines(textFile);
@@ -42,7 +45,7 @@ namespace AgregatorM3.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToBlacklist([FromBody]string item)
+        public IActionResult Blacklist(string item)
         {
             System.IO.File.AppendAllText("blacklist.txt", item + Environment.NewLine);
 
