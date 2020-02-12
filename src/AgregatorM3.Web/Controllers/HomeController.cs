@@ -35,17 +35,18 @@ namespace AgregatorM3.Web.Controllers
 
         private static List<string> ReadSeenData()
         {
-            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\seen.txt";
+            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\blacklist.txt";
             var lines = System.IO.File.ReadAllLines(textFile);
 
             return lines.OfType<string>().ToList();
         }
 
-        public IActionResult AddToBlacklist(string link)
+        [HttpPost]
+        public IActionResult AddToBlacklist([FromBody]string item)
         {
-            System.IO.File.AppendAllText("blacklist.txt", link + Environment.NewLine);
+            System.IO.File.AppendAllText("blacklist.txt", item + Environment.NewLine);
 
-            return Ok();
+            return Json(new { success = true });
         }
     }
 }

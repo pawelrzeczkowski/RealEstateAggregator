@@ -17,7 +17,7 @@
         {
             <tr>
                 <td><a href="@url" target="_blank">@url</a></td>
-                <td>@Html.ActionLink("remove", "AddToBlacklist", "Home", new { link = @url }, null)</td>
+                <td><button type="button" class="btn btn-danger" onclick="addToBlackList('@url');">remove</button></td>
             </tr>
         }
         </tbody>
