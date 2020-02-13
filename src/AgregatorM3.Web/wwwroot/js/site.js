@@ -4,7 +4,14 @@
     );
 };
 
-$('.btn-danger').click(function() {
+var addToWhiteList = function (value) {
+    $.post(
+        '/home/whiteList', { item: value }
+    );
+};
+
+$('.btn').click(function() {
     $(this).closest("tr").remove();
 });
+
 

@@ -31,7 +31,8 @@ namespace AgregatorM3.Web.Controllers
             }
 
             var blackList = GetBlackList();
-            resultList = resultList.Except(blackList).Distinct().ToList();
+            var whiteList = GetWhiteList();
+            resultList = resultList.Except(blackList).Except(whiteList).Distinct().ToList();
 
             return View(resultList);
         }
@@ -44,10 +45,26 @@ namespace AgregatorM3.Web.Controllers
             return lines.OfType<string>().ToList();
         }
 
+        private static List<string> GetWhiteList()
+        {
+            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\whitelist.txt";
+            var lines = System.IO.File.ReadAllLines(textFile);
+
+            return lines.OfType<string>().ToList();
+        }
+
         [HttpPost]
         public IActionResult Blacklist(string item)
         {
             System.IO.File.AppendAllText("blacklist.txt", item + Environment.NewLine);
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult Whitelist(string item)
+        {
+            System.IO.File.AppendAllText("whitelist.txt", item + Environment.NewLine);
 
             return Json(new { success = true });
         }
