@@ -32,7 +32,7 @@ namespace AgregatorM3.Web.Controllers
 
             var blackList = GetBlackList();
             var whiteList = GetWhiteList();
-            resultList = resultList.Except(blackList).Except(whiteList).Distinct().ToList();
+            resultList = resultList.Except(blackList).Except(whiteList).Except(whiteList).Distinct().ToList();
 
             return View(resultList);
         }
