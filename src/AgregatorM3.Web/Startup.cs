@@ -25,6 +25,7 @@ namespace AgregatorM3.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddTransient<IScrappingService, OlxScrappingService>();
             services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
         }
