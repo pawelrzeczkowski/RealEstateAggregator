@@ -28,6 +28,7 @@ namespace AgregatorM3.Web
             services.AddTransient<IScrappingService, OlxScrappingService>();
             services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
+            services.AddTransient<IScrappingService, OtoDomScrappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
