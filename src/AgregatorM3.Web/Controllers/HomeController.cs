@@ -40,6 +40,16 @@ namespace AgregatorM3.Web.Controllers
             return View(resultList);
         }
 
+        public IActionResult Whitelist()
+        {
+            return View(_offerRepository.GetWhiteList());
+        }
+
+        public IActionResult Blacklist()
+        {
+            return View(_offerRepository.GetBlackList());
+        }
+
         [HttpPost]
         public IActionResult AddToBlacklist(string item)
         {
