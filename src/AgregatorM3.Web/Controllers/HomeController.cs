@@ -30,7 +30,8 @@ namespace AgregatorM3.Web.Controllers
 
             foreach (var service in _scrappingServices)
             {
-                resultList.AddRange(await service.GetData(priceMin, priceMax));
+                var singleResult = await service.GetData(priceMin, priceMax);
+                resultList.AddRange(singleResult);
             }
 
             var blackList = _offerRepository.GetBlackList();
