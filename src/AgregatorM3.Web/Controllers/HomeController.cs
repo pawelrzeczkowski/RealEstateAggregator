@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AgregatorM3.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using AgregatorM3.Web.Services;
 
@@ -12,10 +13,12 @@ namespace AgregatorM3.Web.Controllers
     {
         // private static List<string> seenAdverts = ReadSeenData();
         private readonly IEnumerable<IScrappingService> _scrappingServices;
+        private readonly IOfferRepository _offerRepository; 
 
-        public HomeController(IEnumerable<IScrappingService> scrappingServices)
+        public HomeController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
         {
             _scrappingServices = scrappingServices;
+            _offerRepository = offerRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -30,31 +33,15 @@ namespace AgregatorM3.Web.Controllers
                 resultList.AddRange(await service.GetData(priceMin, priceMax));
             }
 
-            var blackList = GetBlackList();
-            var whiteList = GetWhiteList();
+            var blackList = _offerRepository.GetBlackList();
+            var whiteList = _offerRepository.GetWhiteList();
             resultList = resultList.Except(blackList).Except(whiteList).Except(whiteList).Distinct().ToList();
 
             return View(resultList);
         }
 
-        private static List<string> GetBlackList()
-        {
-            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\blacklist.txt";
-            var lines = System.IO.File.ReadAllLines(textFile);
-
-            return lines.OfType<string>().ToList();
-        }
-
-        private static List<string> GetWhiteList()
-        {
-            var textFile = @"C:\Code\AgregatorM3\src\AgregatorM3.Web\whitelist.txt";
-            var lines = System.IO.File.ReadAllLines(textFile);
-
-            return lines.OfType<string>().ToList();
-        }
-
         [HttpPost]
-        public IActionResult Blacklist(string item)
+        public IActionResult AddToBlacklist(string item)
         {
             System.IO.File.AppendAllText("blacklist.txt", item + Environment.NewLine);
 
@@ -62,7 +49,7 @@ namespace AgregatorM3.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Whitelist(string item)
+        public IActionResult AddToWhitelist(string item)
         {
             System.IO.File.AppendAllText("whitelist.txt", item + Environment.NewLine);
 

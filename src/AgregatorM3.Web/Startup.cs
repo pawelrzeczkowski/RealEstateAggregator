@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AgregatorM3.Web.Repositories;
 using AgregatorM3.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace AgregatorM3.Web
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
             services.AddTransient<IScrappingService, OtoDomScrappingService>();
             services.AddTransient<IScrappingService, GratkaScrappingService>();
+            services.AddTransient<IOfferRepository, OfferRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

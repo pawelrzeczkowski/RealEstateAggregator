@@ -1,12 +1,12 @@
 ﻿var addToBlackList = function (value) {
     $.post(
-        '/home/blackList', {item : value }
+        '/home/addToBlacklist', {item : value }
     );
 };
 
 var addToWhiteList = function (value) {
     $.post(
-        '/home/whiteList', { item: value }
+        '/home/addTowhiteList', { item: value }
     );
 };
 
