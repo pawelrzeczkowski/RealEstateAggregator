@@ -138,28 +138,26 @@ namespace AgregatorM3.ConsoleApp
             for (var page = 1; page < 10; page++)
             {
                 var paging = string.Empty;
-                if (page > 1) paging = $"page={page}&";
-                var url =
-                    $"https://gratka.pl/nieruchomosci/mieszkania/warszawa/mokotow/sprzedaz?{paging}cena-calkowita:min={priceMin}&cena-calkowita:max={priceMax}"
-                    + $"&rynek=wtorny&cena-za-m2:max=13500&powierzchnia-w-m2:min=60&powierzchnia-w-m2:max=100&liczba-pokoi:min=3&liczba-pokoi:max=5"
-                    + $"&pietro:min=3&pietro:max=999";
+                    if (page > 1) paging = $"&page={page}";
+                    var url =
+                        $"https://www.morizon.pl/mieszkania/warszawa/mokotow/?ps%5Bprice_from%5D={priceMin}&ps%5Bprice_to%5D={priceMax}&ps%5Bprice_m2_to%5D=13500"
+                        + "&ps%5Bliving_area_from%5D=60&ps%5Bliving_area_to%5D=100&ps%5Bnumber_of_rooms_from%5D=3&ps%5Bnumber_of_rooms_to%5D=4&ps%5Bhas_parking_places%"
+                        + "5D=1&ps%5Bmarket_type%5D%5B0%5D=2" + paging;
 
-                client.DefaultRequestHeaders.Add("Accept", "text/html");
-                var response = await client.GetAsync(url);
-                if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 10) break;
-                if (!response.IsSuccessStatusCode) break;
-                var content = await response.Content.ReadAsStringAsync();
+                    client.DefaultRequestHeaders.Add("Accept", "text/html");
+                    var response = await client.GetAsync(url);
+                    if (response.RequestMessage.RequestUri.ToString().Length != url.Length) break;
+                    if (!response.IsSuccessStatusCode) break;
+                    var content = await response.Content.ReadAsStringAsync();
 
-                if (content.Contains("Nie znaleźliśmy tej strony")) break;
+                    var htmDocument = new HtmlDocument();
+                    htmDocument.LoadHtml(content);
+                    var nodes = htmDocument.DocumentNode.SelectNodes(
+                        "//div[@id='background']/div[@id='contentPage']/div[@class='contentBox']/div/div/div/section/div/div/div/div/section/header/a");
+                    resultsList.AddRange(nodes.Select(node =>
+                        $"{node.GetAttributeValue("href", "incorrect htmlNode query")}"));
 
-                var htmDocument = new HtmlDocument();
-                htmDocument.LoadHtml(content);
-                var nodes = htmDocument.DocumentNode.SelectNodes(
-                    "//div[@class='row']/div[@class='container small-12 column']/div[@class='content']/div[@class='content__listingContainer']/div[@id='leftColumn']/article[@class='teaser ']/div[@class='teaser__content']/div[@class='teaser__infoBox']/h2/a");
-                resultsList.AddRange(nodes.Select(node =>
-                    $"{node.GetAttributeValue("href", "incorrect htmlNode query")}"));
-
-                Console.WriteLine(resultsList.Count);
+                    Console.WriteLine(resultsList.Count);
             }
         }
 

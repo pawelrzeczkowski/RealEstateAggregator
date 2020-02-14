@@ -31,6 +31,7 @@ namespace AgregatorM3.Web
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
             services.AddTransient<IScrappingService, OtoDomScrappingService>();
             services.AddTransient<IScrappingService, GratkaScrappingService>();
+            services.AddTransient<IScrappingService, MorizonScrappingService>();
             services.AddTransient<IOfferRepository, OfferRepository>();
         }
 
