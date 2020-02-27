@@ -6,5 +6,7 @@ namespace AgregatorM3.Web.Repositories
     {
         List<string> GetBlackList();
         List<string> GetWhiteList();
+        void AddToBlackList(string item);
+        void AddToWhiteList(string item);
     }
 }

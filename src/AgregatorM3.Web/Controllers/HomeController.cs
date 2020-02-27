@@ -57,16 +57,14 @@ namespace AgregatorM3.Web.Controllers
         [HttpPost]
         public IActionResult AddToBlacklist(string item)
         {
-            System.IO.File.AppendAllText("blacklist.txt", item + Environment.NewLine);
-
+            _offerRepository.AddToBlackList(item);
             return Json(new { success = true });
         }
 
         [HttpPost]
         public IActionResult AddToWhitelist(string item)
         {
-            System.IO.File.AppendAllText("whitelist.txt", item + Environment.NewLine);
-
+            _offerRepository.AddToWhiteList(item);
             return Json(new { success = true });
         }
     }
