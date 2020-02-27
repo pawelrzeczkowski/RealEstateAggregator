@@ -13,7 +13,7 @@ namespace AgregatorM3.Web.Controllers
     {
         // private static List<string> seenAdverts = ReadSeenData();
         private readonly IEnumerable<IScrappingService> _scrappingServices;
-        private readonly IOfferRepository _offerRepository; 
+        private readonly IOfferRepository _offerRepository;
 
         public HomeController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
         {
@@ -21,12 +21,15 @@ namespace AgregatorM3.Web.Controllers
             _offerRepository = offerRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View(new List<string>());
+        }
+
+        public async Task<IActionResult> GetData(int priceMin, int priceMax)
         {
             // USE ASYNC STREAMS
             var resultList = new List<string>();
-            var priceMin = 500000;
-            var priceMax = 950000;
 
             foreach (var service in _scrappingServices)
             {
