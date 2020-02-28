@@ -1,0 +1,21 @@
+﻿@model System.Collections.Generic.List<string>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-xs-8">LINK</th>
+        <th scope="col" class="col-xs-2">Blacklist</th>
+        <th scope="col" class="col-xs-2">Whitelist</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var url in Model)
+    {
+        <tr>
+            <td><a href="@url" target="_blank">@url</a></td>
+            <td><button type="button" class="btn btn-danger btn-wide" onclick="addToBlackList('@url');">remove</button></td>
+            <td><button type="button" class="btn btn-success btn-wide" onclick="addToWhiteList('@url');">like</button></td>
+        </tr>
+    }
+    </tbody>
+</table>

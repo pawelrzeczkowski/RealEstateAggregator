@@ -9,13 +9,13 @@ using AgregatorM3.Web.Services;
 
 namespace AgregatorM3.Web.Controllers
 {
-    public class HomeController : Controller
+    public class SearchController : Controller
     {
         // private static List<string> seenAdverts = ReadSeenData();
         private readonly IEnumerable<IScrappingService> _scrappingServices;
         private readonly IOfferRepository _offerRepository;
 
-        public HomeController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
+        public SearchController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
         {
             _scrappingServices = scrappingServices;
             _offerRepository = offerRepository;
@@ -31,17 +31,20 @@ namespace AgregatorM3.Web.Controllers
             // USE ASYNC STREAMS
             var resultList = new List<string>();
 
-            foreach (var service in _scrappingServices)
-            {
-                var singleResult = await service.GetData(priceMin, priceMax);
-                resultList.AddRange(singleResult);
-            }
+            //foreach (var service in _scrappingServices)
+            //{
+            //    var singleResult = await service.GetData(priceMin, priceMax);
+            //    resultList.AddRange(singleResult);
+            //}
+
+            var singleResult = await _scrappingServices.First().GetData(priceMin, priceMax);
+            resultList.AddRange(singleResult);
 
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
             resultList = resultList.Except(blackList).Except(whiteList).Except(whiteList).Distinct().ToList();
 
-            return View(resultList);
+            return View("Index", resultList);
         }
 
         public IActionResult Whitelist()
