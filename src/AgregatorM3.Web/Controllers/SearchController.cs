@@ -12,12 +12,12 @@ namespace AgregatorM3.Web.Controllers
     public class SearchController : Controller
     {
         // private static List<string> seenAdverts = ReadSeenData();
-        private readonly IEnumerable<IScrappingService> _scrappingServices;
+        private readonly ISingletonDataService _singletonDataService;
         private readonly IOfferRepository _offerRepository;
 
-        public SearchController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
+        public SearchController(ISingletonDataService singletonDataService, IOfferRepository offerRepository)
         {
-            _scrappingServices = scrappingServices;
+            _singletonDataService = singletonDataService;
             _offerRepository = offerRepository;
         }
 
@@ -28,17 +28,10 @@ namespace AgregatorM3.Web.Controllers
 
         public async Task<IActionResult> GetData(int priceMin, int priceMax)
         {
-            // USE ASYNC STREAMS
-            var resultList = new List<string>();
-
-            //foreach (var service in _scrappingServices)
-            //{
-            //    var singleResult = await service.GetData(priceMin, priceMax);
-            //    resultList.AddRange(singleResult);
-            //}
-
-            var singleResult = await _scrappingServices.First().GetData(priceMin, priceMax);
-            resultList.AddRange(singleResult);
+            // TODO USE ASYNC STREAMS
+            // TODO https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-3.1&tabs=visual-studio
+            // TODO https://stackoverflow.com/questions/46904678/call-signalr-core-hub-method-from-controller
+            var resultList = await _singletonDataService.GetData(priceMin, priceMax);
 
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
