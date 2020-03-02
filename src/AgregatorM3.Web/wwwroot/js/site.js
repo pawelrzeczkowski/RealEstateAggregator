@@ -1,12 +1,21 @@
 ﻿var addToBlackList = function (value) {
     $.post(
-        '/home/addToBlacklist', {item : value }
+        '/search/addToBlacklist', {item : value }
     );
 };
 
 var addToWhiteList = function (value) {
     $.post(
-        '/home/addTowhiteList', { item: value }
+        '/search/addTowhiteList', { item: value }
+    );
+};
+
+var addToBlackListAndRemoveFromWhiteList = function (value) {
+    $.post(
+        '/search/addToBlacklist', { item: value }
+    );
+    $.post(
+        '/search/removeFromWhitelist', { item: value }
     );
 };
 

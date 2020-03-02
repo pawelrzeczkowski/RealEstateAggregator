@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AgregatorM3.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +59,13 @@ namespace AgregatorM3.Web.Controllers
         public IActionResult AddToWhitelist(string item)
         {
             _offerRepository.AddToWhiteList(item);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromWhitelist(string item)
+        {
+            _offerRepository.RemoveFromWhitelist(item);
             return Json(new { success = true });
         }
     }
