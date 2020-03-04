@@ -5,6 +5,6 @@ namespace AgregatorM3.Web.Services
 {
     public interface IScrappingService
     {
-        Task<List<string>> GetData(int priceMin, int priceMax);
+        IAsyncEnumerable<string> GetData(int priceMin, int priceMax);
     }
 }

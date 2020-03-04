@@ -14,19 +14,15 @@ namespace AgregatorM3.Web.Services
             _scrappingServices = scrappingServices;
         }
 
-        public async Task<List<string>> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
         {
-            var resultList = new List<string>();
-            //foreach (var service in _scrappingServices)
-            //{
-            //    var singleResult = await service.GetData(priceMin, priceMax);
-            //    resultList.AddRange(singleResult);
-            //}
-
-            var singleResult = await _scrappingServices.First().GetData(priceMin, priceMax);
-            resultList.AddRange(singleResult);
-
-            return resultList;
+            foreach (var service in _scrappingServices)
+            {
+                await foreach(var result in service.GetData(priceMin, priceMax))
+                {
+                    yield return result;
+                }
+            }
         }
     }
 }

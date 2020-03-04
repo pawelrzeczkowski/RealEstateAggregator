@@ -6,6 +6,6 @@ namespace AgregatorM3.Web.Services
 {
     public interface ISingletonDataService
     {
-        Task<List<string>> GetData(int priceMin, int priceMax);
+        IAsyncEnumerable<string> GetData(int priceMin, int priceMax);
     }
 }

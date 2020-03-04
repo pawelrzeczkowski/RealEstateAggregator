@@ -11,7 +11,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async Task<List<string>> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
         {
             var locationList = new List<string>{
                 "wejnerta", "goszczyńskiego", "malczewskiego","pilicka", "widok+na+miasto", "panorama+miasta", "panorama+warszawy",
@@ -26,7 +26,6 @@ namespace AgregatorM3.Web.Services
                 //"szczekocińska", "wybieg", "piłkarska", "słoneczna", "olszewska", "chocimska", "bałuckiego"
             };
 
-            var resultsList = new List<string>();
             foreach (var location in locationList)
             {
                 var gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
@@ -46,14 +45,9 @@ namespace AgregatorM3.Web.Services
 
                 foreach (var node in nodes)
                 {
-                    var linkResult = $"https://www.gumtree.pl{node.GetAttributeValue("href", "incorrect htmlNode query")}";
-                    if (!resultsList.Contains(linkResult))
-                    {
-                        resultsList.Add(linkResult);
-                    }
+                    yield return $"{node.GetAttributeValue("href", "incorrect htmlNode query")}";
                 }
             }
-            return resultsList;
         }
     }
 }

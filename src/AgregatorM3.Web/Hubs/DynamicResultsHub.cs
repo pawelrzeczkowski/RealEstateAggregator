@@ -5,9 +5,9 @@ namespace AgregatorM3.Web.Hubs
 {
     public class DynamicResultsHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string serviceName, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.All.SendAsync("ReceiveMessage", serviceName, message);
         }
     }
 }

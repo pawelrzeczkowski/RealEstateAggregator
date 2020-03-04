@@ -11,9 +11,8 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async Task<List<string>> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
         {
-            var resultsList = new List<string>();
             for (var page = 1; page < 7; page++)
             {
                 var paging = string.Empty;
@@ -36,11 +35,12 @@ namespace AgregatorM3.Web.Services
                 htmDocument.LoadHtml(content);
                 var nodes = htmDocument.DocumentNode.SelectNodes(
                     "//div[@id='innerLayout']/div[@id='listContainer']/section[@id='body-container']/div[3]/div/div[1]/table[@id='offers_table']/tbody/tr/td/div/table/tbody/tr/td[2]/div/h3/a");
-                resultsList.AddRange(nodes.Select(node =>
-                    $"{node.GetAttributeValue("href", "incorrect htmlNode query")}"));
-            }
 
-            return resultsList;
+                foreach (var node in nodes)
+                {
+                    yield return $"{node.GetAttributeValue("href", "incorrect htmlNode query")}";
+                }
+            }
         }
     }
 }

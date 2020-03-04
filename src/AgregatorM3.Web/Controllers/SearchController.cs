@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using AgregatorM3.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using AgregatorM3.Web.Services;
+using AgregatorM3.Web.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AgregatorM3.Web.Controllers
 {
@@ -12,11 +14,13 @@ namespace AgregatorM3.Web.Controllers
         // private static List<string> seenAdverts = ReadSeenData();
         private readonly ISingletonDataService _singletonDataService;
         private readonly IOfferRepository _offerRepository;
+        private readonly IHubContext<DynamicResultsHub> _signalHub;
 
-        public SearchController(ISingletonDataService singletonDataService, IOfferRepository offerRepository)
+        public SearchController(ISingletonDataService singletonDataService, IOfferRepository offerRepository, IHubContext<DynamicResultsHub> hub)
         {
             _singletonDataService = singletonDataService;
             _offerRepository = offerRepository;
+            _signalHub = hub;
         }
 
         public IActionResult Index()
@@ -29,13 +33,17 @@ namespace AgregatorM3.Web.Controllers
             // TODO USE ASYNC STREAMS
             // TODO https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-3.1&tabs=visual-studio
             // TODO https://stackoverflow.com/questions/46904678/call-signalr-core-hub-method-from-controller
-            var resultList = await _singletonDataService.GetData(priceMin, priceMax);
 
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
-            resultList = resultList.Except(blackList).Except(whiteList).Except(whiteList).Distinct().ToList();
 
-            return View("Index", resultList);
+            await foreach (var result in _singletonDataService.GetData(priceMin, priceMax))
+            {
+                if (blackList.Contains(result) || whiteList.Contains(result)) continue;
+                await _signalHub.Clients.All.SendAsync("ReceiveMessage", result.Length.ToString(), result);
+            }
+
+            return View("Index");
         }
 
         public IActionResult Whitelist()
