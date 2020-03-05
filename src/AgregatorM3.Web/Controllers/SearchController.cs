@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using AgregatorM3.Web.Services;
 using AgregatorM3.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using AgregatorM3.Web.Models;
 
 namespace AgregatorM3.Web.Controllers
 {
@@ -25,10 +26,12 @@ namespace AgregatorM3.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(new List<string>());
+            return View(new SearchModel());
         }
 
-        public async Task<IActionResult> GetData(int priceMin, int priceMax)
+
+        [HttpPost]
+        public async Task<IActionResult> GetData(SearchModel parameters)
         {
             // TODO USE ASYNC STREAMS
             // TODO https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-3.1&tabs=visual-studio
@@ -37,13 +40,13 @@ namespace AgregatorM3.Web.Controllers
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
 
-            await foreach (var result in _singletonDataService.GetData(priceMin, priceMax))
+            await foreach (var result in _singletonDataService.GetData(parameters.priceMin, parameters.priceMax))
             {
                 if (blackList.Contains(result) || whiteList.Contains(result)) continue;
                 await _signalHub.Clients.All.SendAsync("ReceiveMessage", result.Length.ToString(), result);
             }
 
-            return View("Index");
+            return PartialView("ajax says it's done");
         }
 
         public IActionResult Whitelist()
