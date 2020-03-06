@@ -45,7 +45,7 @@ namespace AgregatorM3.Web.Services
 
                 foreach (var node in nodes)
                 {
-                    yield return $"{node.GetAttributeValue("href", "incorrect htmlNode query")}";
+                    yield return $"https://www.gumtree.pl{node.GetAttributeValue("href", "incorrect htmlNode query")}";
                 }
             }
         }

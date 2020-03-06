@@ -46,7 +46,7 @@ namespace AgregatorM3.Web.Controllers
                 await _signalHub.Clients.All.SendAsync("ReceiveMessage", result.Length.ToString(), result);
             }
 
-            return PartialView("ajax says it's done");
+            return Json("done");
         }
 
         public IActionResult Whitelist()
