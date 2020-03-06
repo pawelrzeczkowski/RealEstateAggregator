@@ -11,7 +11,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async Task<List<string>> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
         {
             var locationList = new List<string>{
                 "aleksandra -wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
@@ -27,7 +27,6 @@ namespace AgregatorM3.Web.Services
                 //"szczekocinska", "wybieg", "pilkarska", "sloneczna", "olszewska", "chocimska", "michala-baluckiego"
             };
 
-            var resultsList = new List<string>();
             foreach (var location in locationList)
             {
                 var domImportaUrl = $"https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/{location}?Surface.From=55&Surface.To=110&Price.From=" +
@@ -44,10 +43,12 @@ namespace AgregatorM3.Web.Services
                 htmDocument.LoadHtml(content);
                 var nodes = htmDocument.DocumentNode.
                     SelectNodes("//main/div/div/div/div/div/div[@class='listing__container']/div/ul/li/article");
-                resultsList.AddRange(nodes.Select(node => $"https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}"));
-            }
 
-            return resultsList;
+                foreach (var node in nodes)
+                {
+                    yield return $"https://www.domiporta.pl{node.GetAttributeValue("data-href", "incorrect htmlNode query")}";
+                }
+            }
         }
     }
 }

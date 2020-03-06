@@ -8,5 +8,6 @@ namespace AgregatorM3.Web.Repositories
         List<string> GetWhiteList();
         void AddToBlackList(string item);
         void AddToWhiteList(string item);
+        void RemoveFromWhitelist(string item);
     }
 }

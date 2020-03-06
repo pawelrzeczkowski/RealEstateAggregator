@@ -1,50 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AgregatorM3.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using AgregatorM3.Web.Services;
+using AgregatorM3.Web.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using AgregatorM3.Web.Models;
 
 namespace AgregatorM3.Web.Controllers
 {
     public class SearchController : Controller
     {
         // private static List<string> seenAdverts = ReadSeenData();
-        private readonly IEnumerable<IScrappingService> _scrappingServices;
+        private readonly ISingletonDataService _singletonDataService;
         private readonly IOfferRepository _offerRepository;
+        private readonly IHubContext<DynamicResultsHub> _signalHub;
 
-        public SearchController(IEnumerable<IScrappingService> scrappingServices, IOfferRepository offerRepository)
+        public SearchController(ISingletonDataService singletonDataService, IOfferRepository offerRepository, IHubContext<DynamicResultsHub> hub)
         {
-            _scrappingServices = scrappingServices;
+            _singletonDataService = singletonDataService;
             _offerRepository = offerRepository;
+            _signalHub = hub;
         }
 
         public IActionResult Index()
         {
-            return View(new List<string>());
+            return View(new SearchModel());
         }
 
-        public async Task<IActionResult> GetData(int priceMin, int priceMax)
+
+        [HttpPost]
+        public async Task<IActionResult> GetData(SearchModel parameters)
         {
-            // USE ASYNC STREAMS
-            var resultList = new List<string>();
-
-            //foreach (var service in _scrappingServices)
-            //{
-            //    var singleResult = await service.GetData(priceMin, priceMax);
-            //    resultList.AddRange(singleResult);
-            //}
-
-            var singleResult = await _scrappingServices.First().GetData(priceMin, priceMax);
-            resultList.AddRange(singleResult);
+            // TODO USE ASYNC STREAMS
+            // TODO https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-3.1&tabs=visual-studio
+            // TODO https://stackoverflow.com/questions/46904678/call-signalr-core-hub-method-from-controller
 
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
-            resultList = resultList.Except(blackList).Except(whiteList).Except(whiteList).Distinct().ToList();
 
-            return View("Index", resultList);
+            await foreach (var result in _singletonDataService.GetData(parameters.priceMin, parameters.priceMax))
+            {
+                if (blackList.Contains(result) || whiteList.Contains(result)) continue;
+                await _signalHub.Clients.All.SendAsync("ReceiveMessage", result.Length.ToString(), result);
+            }
+
+            return Json("done");
         }
 
         public IActionResult Whitelist()
@@ -68,6 +70,13 @@ namespace AgregatorM3.Web.Controllers
         public IActionResult AddToWhitelist(string item)
         {
             _offerRepository.AddToWhiteList(item);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromWhitelist(string item)
+        {
+            _offerRepository.RemoveFromWhitelist(item);
             return Json(new { success = true });
         }
     }

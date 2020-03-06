@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AgregatorM3.Web.Hubs;
 using AgregatorM3.Web.Repositories;
 using AgregatorM3.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +22,7 @@ namespace AgregatorM3.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSignalR();
             services.AddTransient<IScrappingService, OlxScrappingService>();
             services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
@@ -33,6 +30,7 @@ namespace AgregatorM3.Web
             services.AddTransient<IScrappingService, GratkaScrappingService>();
             services.AddTransient<IScrappingService, MorizonScrappingService>();
             services.AddTransient<IOfferRepository, OfferRepository>();
+            services.AddSingleton<ISingletonDataService, SingletonDataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,13 +48,12 @@ namespace AgregatorM3.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<DynamicResultsHub>("/dynamicResultsHub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Search}/{action=Index}/{id?}");
