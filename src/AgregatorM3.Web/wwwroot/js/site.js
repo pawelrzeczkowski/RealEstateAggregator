@@ -3,6 +3,7 @@
         '/search/addToBlacklist',
         { item: value }
     );
+    decrementResultCounter();
 };
 
 var addToWhiteList = function (value) {
@@ -10,6 +11,7 @@ var addToWhiteList = function (value) {
         '/search/addTowhiteList',
         { item: value }
     );
+    decrementResultCounter();
 };
 
 var addToBlackListAndRemoveFromWhiteList = function (value) {
@@ -35,5 +37,10 @@ $('#search').click(function (event) {
 $(document).on("click", ".btn", function () {
     $(this).closest("tr").remove();
 });
+
+function decrementResultCounter() {
+    let newVal = parseInt(document.getElementById('offersCounter').innerText, 10) - 1
+    document.getElementById("offersCounter").innerText  = newVal;
+}
 
 

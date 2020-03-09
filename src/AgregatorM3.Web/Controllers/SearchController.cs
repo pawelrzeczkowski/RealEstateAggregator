@@ -33,17 +33,18 @@ namespace AgregatorM3.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> GetData(SearchModel parameters)
         {
-            // TODO USE ASYNC STREAMS
             // TODO https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-3.1&tabs=visual-studio
             // TODO https://stackoverflow.com/questions/46904678/call-signalr-core-hub-method-from-controller
 
+            var resultCounter = 0;
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
 
             await foreach (var result in _singletonDataService.GetData(parameters.priceMin, parameters.priceMax))
             {
                 if (blackList.Contains(result) || whiteList.Contains(result)) continue;
-                await _signalHub.Clients.All.SendAsync("ReceiveMessage", result.Length.ToString(), result);
+                else resultCounter ++;
+                await _signalHub.Clients.All.SendAsync("ReceiveMessage", resultCounter, result);
             }
 
             return Json("done");
