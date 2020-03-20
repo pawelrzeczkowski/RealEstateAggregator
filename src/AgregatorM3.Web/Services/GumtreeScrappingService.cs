@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
 
 namespace AgregatorM3.Web.Services
@@ -11,7 +12,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             var locationList = new List<string>{
                 "wejnerta", "goszczyńskiego", "malczewskiego","pilicka", "widok+na+miasto", "panorama+miasta", "panorama+warszawy",
@@ -29,7 +30,7 @@ namespace AgregatorM3.Web.Services
             foreach (var location in locationList)
             {
                 var gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
-                    "q=", location, "&pr=", priceMin, ",", priceMax); // for private only add "&df=ownr&nr=3"
+                    "q=", location, "&pr=", searchModel.PriceFrom, ",", searchModel.PriceTo); // for private only add "&df=ownr&nr=3"
 
                 var response = await client.GetAsync(gumtreeUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");

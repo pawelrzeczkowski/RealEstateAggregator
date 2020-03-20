@@ -1,13 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "RealEstate SearchEngine";
+    ViewData["Title"] = "RealEstate Mokotów";
 }
+@model SearchModel
 
 <div class="row">
     <form class="form-inline" id="searchForm" method="post">
         <label for="priceMin" class="sm-2">Price min</label>
-        <input type="number" class="form-control sm-2" id="priceMin" name="priceMin" value="400000" />
+        <input type="number" class="form-control sm-2" id="priceMin" name="priceMin" value=@Model.PriceFrom />
         <label for="priceMax" class="sm-2">Price max</label>
-        <input type="number" class="form-control sm-2" id="priceMax" name="priceMax" value="950000" />
+        <input type="number" class="form-control sm-2" id="priceMax" name="priceMax" value=@Model.PriceTo />
         <input type="submit" id="search" value="Search" class="btn btn-primary" />
     </form>
 </div>

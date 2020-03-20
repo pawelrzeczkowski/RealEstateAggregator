@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
 
 namespace AgregatorM3.Web.Services
@@ -11,16 +12,16 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             for (var page = 1; page < 10; page++)
             {
                 var paging = string.Empty;
                 if (page > 1) paging = $"page={page}&";
                 var url =
-                    $"https://gratka.pl/nieruchomosci/mieszkania/warszawa/mokotow/sprzedaz?{paging}cena-calkowita:min={priceMin}&cena-calkowita:max={priceMax}"
-                    + $"&rynek=wtorny&cena-za-m2:max=13500&powierzchnia-w-m2:min=60&powierzchnia-w-m2:max=100&liczba-pokoi:min=3&liczba-pokoi:max=5"
-                    + $"&pietro:min=3&pietro:max=999";
+                    $"https://gratka.pl/nieruchomosci/mieszkania/warszawa/mokotow/sprzedaz?{paging}cena-calkowita:min={searchModel.PriceFrom}&cena-calkowita:max={searchModel.PriceTo}"
+                    + $"&rynek=wtorny&cena-za-m2:max={searchModel.PricePerMeterTo}&powierzchnia-w-m2:min={searchModel.SurfaceFrom}&powierzchnia-w-m2:max={searchModel.SurfaceTo}" 
+                    + $"&liczba-pokoi:min={searchModel.RoomsFrom}&liczba-pokoi:max={searchModel.RoomsTo}&pietro:min=3&pietro:max=999";
 
                 client.DefaultRequestHeaders.Add("Accept", "text/html");
                 var response = await client.GetAsync(url);

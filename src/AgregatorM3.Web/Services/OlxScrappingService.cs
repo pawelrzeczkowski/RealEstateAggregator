@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
 
 namespace AgregatorM3.Web.Services
@@ -11,7 +12,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             for (var page = 1; page < 7; page++)
             {
@@ -19,8 +20,8 @@ namespace AgregatorM3.Web.Services
                 if (page > 1) paging = $"&page={page}";
                 var url =
                     $"https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/warszawa/?search%5Bfilter_float_price%3Afrom%5D="
-                    + $"{priceMin}&search%5Bfilter_float_price%3Ato%5D={priceMax}&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5B"
-                    + "filter_enum_rooms%5D%5B0%5D=three&search%5Bfilter_enum_rooms%5D%5B1%5D=four"
+                    + $"{searchModel.PriceFrom}&search%5Bfilter_float_price%3Ato%5D={searchModel.PriceTo}&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5B"
+                    + "filter_enum_rooms%5D%5B0%5D=three&search%5Bfilter_enum_rooms%5D%5B1%5D=five"
                     + "&search%5Bdistrict_id%5D=353" + paging;
 
                 client.DefaultRequestHeaders.Add("Accept", "text/html");

@@ -40,7 +40,7 @@ namespace AgregatorM3.Web.Controllers
             var blackList = _offerRepository.GetBlackList();
             var whiteList = _offerRepository.GetWhiteList();
 
-            await foreach (var result in _singletonDataService.GetData(parameters.priceMin, parameters.priceMax))
+            await foreach (var result in _singletonDataService.GetData(parameters))
             {
                 if (blackList.Contains(result) || whiteList.Contains(result)) continue;
                 else resultCounter ++;

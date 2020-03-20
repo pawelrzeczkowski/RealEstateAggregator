@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
 
 namespace AgregatorM3.Web.Services
@@ -11,7 +12,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             var locationList = new List<string>{
                 "aleksandra -wejnerta", "goszczynskiego-seweryna", "antoniego-malczewskiego","pilicka",
@@ -29,8 +30,9 @@ namespace AgregatorM3.Web.Services
 
             foreach (var location in locationList)
             {
-                var domImportaUrl = $"https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/{location}?Surface.From=55&Surface.To=110&Price.From=" +
-                                    $"{priceMin}&Price.To={priceMax}&Rooms.From=3&Rooms.To=4&PricePerMeter.To=13000";
+                var domImportaUrl = $"https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/{location}?" + 
+                                    $"Surface.From={searchModel.SurfaceFrom}&Surface.To={searchModel.SurfaceTo}&Price.From={searchModel.PriceFrom}&Price.To={searchModel.PriceTo}" + 
+                                    $"&Rooms.From={searchModel.RoomsFrom}&Rooms.To={searchModel.RoomsTo}&PricePerMeter.To={searchModel.PricePerMeterTo}";
 
                 var response = await client.GetAsync(domImportaUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");

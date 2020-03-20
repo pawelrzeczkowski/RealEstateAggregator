@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AgregatorM3.Web.Models;
 
 namespace AgregatorM3.Web.Services
 {
@@ -14,11 +15,11 @@ namespace AgregatorM3.Web.Services
             _scrappingServices = scrappingServices;
         }
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             foreach (var service in _scrappingServices)
             {
-                await foreach(var result in service.GetData(priceMin, priceMax))
+                await foreach(var result in service.GetData(searchModel))
                 {
                     yield return result;
                 }

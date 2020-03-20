@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
 
 namespace AgregatorM3.Web.Services
@@ -11,16 +12,16 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(int priceMin, int priceMax)
+        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
         {
             for (var page = 1; page < 7; page++)
             {
                 var paging = string.Empty;
                 if (page > 1) paging = $"&page={page}";
                 var url =
-                    $"https://www.otodom.pl/sprzedaz/mieszkanie/?search%5Bfilter_float_price%3Afrom%5D={priceMin}&search%5Bfilter_float_price%3Ato%5D={priceMax}"
-                    + $"&search%5Bfilter_float_price_per_m%3Ato%5D=13500&search%5Bfilter_float_m%3Afrom%5D=60&search%5Bfilter_float_m%3Ato%5D=100&search%5B"
-                    + $"filter_enum_rooms_num%5D%5B0%5D=3&search%5Bfilter_enum_rooms_num%5D%5B1%5D=4&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5B"
+                    $"https://www.otodom.pl/sprzedaz/mieszkanie/?search%5Bfilter_float_price%3Afrom%5D={searchModel.PriceFrom}&search%5Bfilter_float_price%3Ato%5D={searchModel.PriceTo}"
+                    + $"&search%5Bfilter_float_price_per_m%3Ato%5D={searchModel.PricePerMeterTo}&search%5Bfilter_float_m%3Afrom%5D={searchModel.SurfaceFrom}&search%5Bfilter_float_m%3Ato%5D={searchModel.SurfaceTo}&search%5B"
+                    + $"filter_enum_rooms_num%5D%5B0%5D={searchModel.RoomsFrom}&search%5Bfilter_enum_rooms_num%5D%5B1%5D={searchModel.RoomsTo}&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5B"
                     + $"filter_enum_floor_no%5D%5B0%5D=floor_3&search%5Bfilter_enum_floor_no%5D%5B1%5D=floor_4&search%5Bfilter_enum_floor_no%5D%5B2%5D=floor_5"
                     + $"&search%5Bfilter_enum_floor_no%5D%5B3%5D=floor_6&search%5Bfilter_enum_floor_no%5D%5B4%5D=floor_7&search%5Bfilter_enum_floor_no%5D%5B5%5D"
                     + $"=floor_8&search%5Bfilter_enum_floor_no%5D%5B6%5D=floor_9&search%5Bfilter_enum_floor_no%5D%5B7%5D=floor_10&search%5Bfilter_enum_floor_no%5D%5B8%5D"
