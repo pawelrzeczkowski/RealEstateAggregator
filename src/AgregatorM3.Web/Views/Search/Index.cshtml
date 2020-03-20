@@ -3,23 +3,63 @@
 }
 @model SearchModel
 
-<div class="row">
-    <form class="form-inline" id="searchForm" method="post">
-        <label for="priceMin" class="sm-2">Price min</label>
-        <input type="number" class="form-control sm-2" id="priceMin" name="priceMin" value=@Model.PriceFrom />
-        <label for="priceMax" class="sm-2">Price max</label>
-        <input type="number" class="form-control sm-2" id="priceMax" name="priceMax" value=@Model.PriceTo />
-        <input type="submit" id="search" value="Search" class="btn btn-primary" />
-    </form>
+<button class="collapsible mb-3">New Search</button>
+<div class="content">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="row mb-2 mr-2">
+                <label for="PriceFrom">Price From</label>
+                <input type="number" class="form-control" id="PriceFrom" value=@Model.PriceFrom required>
+            </div>
+            <div class="row mb-2 mr-2">
+                <label for="PriceTo">Price To</label>
+                <input type="number" class="form-control" id="PriceTo" value=@Model.PriceTo required>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row mb-2 mr-2">
+                <label for="SurfaceFrom">Surface From</label>
+                <input type="number" class="form-control" id="SurfaceFrom" value=@Model.SurfaceFrom required>
+            </div>
+            <div class="row mb-2 mr-2">
+                <label for="SurfaceTo">Surface To</label>
+                <input type="number" class="form-control" id="SurfaceTo" value=@Model.SurfaceTo required>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row mb-2 mr-2">
+                <label for="RoomsFrom">Rooms From</label>
+                <input type="number" class="form-control" id="RoomsFrom" value=@Model.RoomsFrom required>
+            </div>
+            <div class="row mb-2 mr-2">
+                <label for="RoomsTo">Rooms To</label>
+                <input type="number" class="form-control" id="RoomsTo" value=@Model.RoomsTo required>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row mb-2 mr-2">
+                <label for="PricePerMeterTo">Price Per Meter To</label>
+                <input type="number" class="form-control" id="PricePerMeterTo" value=@Model.PricePerMeterTo required>
+            </div>
+            <div class="row m-2">
+                <input type="submit" id="search" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col" class="col-xs-8">Offers (<span id="offersCounter"></span>)</th>
-        <th scope="col" class="col-xs-2">Blacklist</th>
-        <th scope="col" class="col-xs-2">Whitelist</th>
-    </tr>
+        <tr>
+            <th scope="col" class="col-xs-8">Offers (<span id="offersCounter"></span>)</th>
+            <th scope="col" class="col-xs-2">Blacklist</th>
+            <th scope="col" class="col-xs-2">Whitelist</th>
+        </tr>
     </thead>
     <tbody id="resultsTbody">
     </tbody>
