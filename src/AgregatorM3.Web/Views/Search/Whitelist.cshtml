@@ -4,22 +4,20 @@
 
 @model List<string>
 
-<div class="container">
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-xs-9">LINK</th>
+        <th scope="col" class="col-xs-3">Blacklist</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var url in Model)
+    {
         <tr>
-            <th scope="col" class="col-xs-9">LINK</th>
-            <th scope="col" class="col-xs-3">Blacklist</th>
+            <td><a href="@url" target="_blank">@url</a></td>
+            <td><button id="whitelist-remove-btn" type="button" class="btn btn-danger btn-wide">remove</button></td>
         </tr>
-        </thead>
-        <tbody>
-        @foreach (var url in Model)
-        {
-            <tr>
-                <td><a href="@url" target="_blank">@url</a></td>
-                <td><button id="whitelist-remove-btn" type="button" class="btn btn-danger btn-wide">remove</button></td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+    }
+    </tbody>
+</table>

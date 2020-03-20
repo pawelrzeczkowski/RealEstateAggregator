@@ -1,14 +1,4 @@
-﻿$('#search').click(function (event) {
-    $.post('/search/GetData',
-        { parameters: {
-            priceMin: $('#priceMin').val(),
-            priceMax: $('#priceMax').val()
-        }}
-    );
-    event.preventDefault();
-});
-
-$(document).on("click", ".btn", function () {
+﻿$(document).on("click", ".btn", function () {
     $(this).closest("tr").remove();
 });
 

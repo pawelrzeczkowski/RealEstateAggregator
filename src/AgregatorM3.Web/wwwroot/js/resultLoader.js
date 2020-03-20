@@ -7,7 +7,7 @@ document.getElementById("search").disabled = true;
 
 connection.on("ReceiveMessage", function (resultCounter, message) {
 
-    var htmlContent = "<tr><td><a href=\"" + message + "\" target=\"_blank\">" + message + "</a></td>" +
+    let htmlContent = "<tr><td><a href=\"" + message + "\" target=\"_blank\">" + message + "</a></td>" +
         "<td><button type=\"button\" id=\"blacklist-add-btn\" class=\"btn btn-danger btn-wide\">remove</button></td>" +
         "<td><button type=\"button\" id=\"whitelist-add-btn\" class=\"btn btn-success btn-wide\">like</button></td></tr>";
     document.getElementById("resultsTbody").insertAdjacentHTML('beforeend', htmlContent);

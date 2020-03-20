@@ -4,20 +4,19 @@
 
 @model List<string>
 
-<div class="container">
-    <table class="table">
-        <thead>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-xs-12">LINK</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var url in Model)
+    {
         <tr>
-            <th scope="col" class="col-xs-12">LINK</th>
+            <td><a href="@url" target="_blank">@url</a></td>
         </tr>
-        </thead>
-        <tbody>
-        @foreach (var url in Model)
-        {
-            <tr>
-                <td><a href="@url" target="_blank">@url</a></td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+    }
+    </tbody>
+</table>
