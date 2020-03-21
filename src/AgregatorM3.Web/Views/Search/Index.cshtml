@@ -45,15 +45,16 @@
                 <label for="PricePerMeterTo">Price Per Meter To</label>
                 <input type="number" class="form-control" id="PricePerMeterTo" value=@Model.PricePerMeterTo required>
             </div>
-            <div class="row m-2">
-                <input type="submit" id="search" value="Search" class="btn btn-primary" />
+            <div class="row mb-2 mr-2">
+                <label class="hidden">search</label>
+                <input type="submit" id="search" value="Search" class="btn btn-primary btn-wide" />
             </div>
         </div>
 
     </div>
 </div>
 
-<table class="table">
+<table class="table display-none" id="resultTable">
     <thead>
         <tr>
             <th scope="col" class="col-xs-8">Offers (<span id="offersCounter"></span>)</th>

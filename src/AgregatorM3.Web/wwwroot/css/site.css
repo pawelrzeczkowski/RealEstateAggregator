@@ -44,15 +44,6 @@ html {
     border-bottom: 1px solid #e5e5e5;
 }
 
-.box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -77,14 +68,10 @@ body {
     width: 100%;
 }
 
-.form-inline {
-    margin: 15px 0;
+.hidden {
+    visibility: hidden;
 }
 
-.form-inline input {
-    margin-right: 15px;
-}
-
-.form-inline label {
-    margin-right: 5px;
+.display-none {
+    display: none;
 }

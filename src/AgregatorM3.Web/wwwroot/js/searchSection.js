@@ -1,6 +1,7 @@
 ﻿$('#search').click(function (event) {
     //getData();
     collapseSearch();
+    showResultTable();
     event.preventDefault();
 });
 
@@ -24,6 +25,10 @@ function getData() {
         RoomsTo: $('#RoomsTo').val(),
         PricePerMeterTo: $('#PricePerMeterTo').val()
     }});
+}
+
+function showResultTable() {
+    document.getElementById("resultTable").style.display = "table"; 
 }
 
 function collapseSearch() {
