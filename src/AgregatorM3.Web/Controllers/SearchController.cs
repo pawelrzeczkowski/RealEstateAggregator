@@ -42,9 +42,11 @@ namespace AgregatorM3.Web.Controllers
 
             await foreach (var result in _singletonDataService.GetData(parameters))
             {
-                if (blackList.Contains(result) || whiteList.Contains(result)) continue;
-                else resultCounter ++;
-                await _signalHub.Clients.All.SendAsync("ReceiveMessage", resultCounter, result);
+                await _signalHub.Clients.All.SendAsync("DisplayProgress", result.ServiceName);
+
+                if (blackList.Contains(result.OfferLink) || whiteList.Contains(result.OfferLink)) continue;
+                else resultCounter++;
+                await _signalHub.Clients.All.SendAsync("DisplayOfferLink", resultCounter, result.OfferLink);
             }
 
             return Json("done");

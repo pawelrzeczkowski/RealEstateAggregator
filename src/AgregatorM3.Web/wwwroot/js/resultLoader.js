@@ -5,7 +5,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/dynamicResultsHub"
 //Disable send button until connection is established
 document.getElementById("search").disabled = true;
 
-connection.on("ReceiveMessage", function (resultCounter, message) {
+connection.on("DisplayOfferLink", function (resultCounter, message) {
 
     let htmlContent = "<tr><td><a href=\"" + message + "\" target=\"_blank\">" + message + "</a></td>" +
         "<td><button type=\"button\" id=\"blacklist-add-btn\" class=\"btn btn-danger btn-wide\">remove</button></td>" +
@@ -13,6 +13,11 @@ connection.on("ReceiveMessage", function (resultCounter, message) {
     document.getElementById("resultsTbody").insertAdjacentHTML('beforeend', htmlContent);
     document.getElementById("offersCounter").innerText = resultCounter;
 });
+
+connection.on("DisplayProgress", function (message) {
+    document.getElementById("progression").innerText = message;
+});
+
 
 connection.start().then(function () {
     document.getElementById("search").disabled = false;

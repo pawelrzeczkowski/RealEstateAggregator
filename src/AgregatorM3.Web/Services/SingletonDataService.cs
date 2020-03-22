@@ -15,7 +15,7 @@ namespace AgregatorM3.Web.Services
             _scrappingServices = scrappingServices;
         }
 
-        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
+        public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
             foreach (var service in _scrappingServices)
             {

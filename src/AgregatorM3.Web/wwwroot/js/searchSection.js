@@ -1,5 +1,5 @@
 ﻿$('#search').click(function (event) {
-    //getData();
+    getData();
     collapseSearch();
     showResultTable();
     event.preventDefault();

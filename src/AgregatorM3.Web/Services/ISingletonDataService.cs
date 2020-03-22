@@ -7,6 +7,6 @@ namespace AgregatorM3.Web.Services
 {
     public interface ISingletonDataService
     {
-        IAsyncEnumerable<string> GetData(SearchModel searchModel);
+        IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel);
     }
 }

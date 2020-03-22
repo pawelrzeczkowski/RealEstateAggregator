@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Net.Http;
 using AgregatorM3.Web.Models;
 using HtmlAgilityPack;
@@ -12,19 +10,19 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
+        public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
             var locationList = new List<string>{
                 "wejnerta", "goszczyńskiego", "malczewskiego","pilicka", "widok+na+miasto", "panorama+miasta", "panorama+warszawy",
-                //"lenartowicza","naruszewicza", "krasickiego", "ursynowska", "broniwoja",
-                //"woronicza", "tyniecka", "szarotki", "konduktorkska", "joliot+curie","gandhiego",
-                //"bytnara", "bukietowa", "modzelewskiego", "kolberga", "piaseczyńska", "stacja+metra","pole+mokotowskie","marzanny",
-                //"boryszewska", "belgijska", "dworkowa", "morskie+oko", "rozana", "madalinskiego", "ludwika-narbutta",
-                //"wisniowa", "rejtana", "bruna", "sandomierska", "łowicka", "kielecka", "opoczyńska", "asfaltowa", "falata",
-                //"akacjowa", "balladyny", "dabrowskiego", "wiktorska", "gimnastyczna", "bełska", "garażowa",
-                //"samochodowa", "domaniewska", "lutocińska", "ksawerów", "abramowskiego", "żywnego",
-                //"bielawska", "wielicka", "kazimierzowska", "odolańska", "lewicka", "kwiatowa", "wrotkowa", "racławicka",
-                //"szczekocińska", "wybieg", "piłkarska", "słoneczna", "olszewska", "chocimska", "bałuckiego"
+                "lenartowicza","naruszewicza", "krasickiego", "ursynowska", "broniwoja",
+                "woronicza", "tyniecka", "szarotki", "konduktorkska", "joliot+curie","gandhiego",
+                "bytnara", "bukietowa", "modzelewskiego", "kolberga", "piaseczyńska", "stacja+metra","pole+mokotowskie","marzanny",
+                "boryszewska", "belgijska", "dworkowa", "morskie+oko", "rozana", "madalinskiego", "ludwika-narbutta",
+                "wisniowa", "rejtana", "bruna", "sandomierska", "łowicka", "kielecka", "opoczyńska", "asfaltowa", "falata",
+                "akacjowa", "balladyny", "dabrowskiego", "wiktorska", "gimnastyczna", "bełska", "garażowa",
+                "samochodowa", "domaniewska", "lutocińska", "ksawerów", "abramowskiego", "żywnego",
+                "bielawska", "wielicka", "kazimierzowska", "odolańska", "lewicka", "kwiatowa", "wrotkowa", "racławicka",
+                "szczekocińska", "wybieg", "piłkarska", "słoneczna", "olszewska", "chocimska", "bałuckiego"
             };
 
             foreach (var location in locationList)
@@ -44,9 +42,15 @@ namespace AgregatorM3.Web.Services
                 var nodes = htmDocument.DocumentNode.
                     SelectNodes("//div[@class='viewport']/div[@class='containment']/div/div[@class='content']/section/div/div[@class='results list-view']/div[@class='view']/div/div").Descendants("a");
 
+                if (nodes == null)
+                {
+                    yield return new ResultModel("Gratka", "incorrect html select node query: Gumtree");
+                }
+
                 foreach (var node in nodes)
                 {
-                    yield return $"https://www.gumtree.pl{node.GetAttributeValue("href", "incorrect htmlNode query")}";
+                    yield return new ResultModel("Gumtree", 
+                        $"https://www.gumtree.pl{node.GetAttributeValue("href", "incorrect htmlNode query: Gumtree")}");
                 }
             }
         }

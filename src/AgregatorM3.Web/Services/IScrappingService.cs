@@ -6,6 +6,6 @@ namespace AgregatorM3.Web.Services
 {
     public interface IScrappingService
     {
-        IAsyncEnumerable<string> GetData(SearchModel searchModel);
+        IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel);
     }
 }

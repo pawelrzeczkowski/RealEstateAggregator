@@ -12,7 +12,7 @@ namespace AgregatorM3.Web.Services
     {
         private readonly HttpClient client = new HttpClient();
 
-        public async IAsyncEnumerable<string> GetData(SearchModel searchModel)
+        public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
             for (var page = 1; page < 7; page++)
             {
@@ -39,10 +39,15 @@ namespace AgregatorM3.Web.Services
                 htmDocument.LoadHtml(content);
                 var nodes = htmDocument.DocumentNode.SelectNodes(
                     "//div[@id='listContainer']/main/section[@id='body-container']/div/div/div/div/article/div[@class='offer-item-details']/header/h3/a");
-                
+
+                if (nodes == null)
+                {
+                    yield return new ResultModel("Gratka", "incorrect html select node query: otodom");
+                }
+
                 foreach (var node in nodes)
                 {
-                    yield return $"{node.GetAttributeValue("href", "incorrect htmlNode query")}";
+                    yield return new ResultModel("OtoDom", $"{node.GetAttributeValue("href", "incorrect htmlNode query: OtoDom")}");
                 }
             }
         }
