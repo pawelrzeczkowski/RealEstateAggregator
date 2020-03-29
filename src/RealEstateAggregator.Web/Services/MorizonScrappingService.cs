@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using Exceptionless;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
 
@@ -38,7 +39,7 @@ namespace RealEstateAggregator.Web.Services
 
                 if (nodes == null)
                 {
-                    yield return new ResultModel("Gratka", "incorrect html select node query: Morizon");
+                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Morizon");
                 }
 
                 foreach (var node in nodes)
