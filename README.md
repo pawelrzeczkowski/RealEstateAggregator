@@ -1,11 +1,12 @@
 # RealEstateAggregator
 
-This is private webscrapping app to query multiple real estate sites offering blacklisting/whitelisting functinality.
+This is private webscrapping app designed to query multiple real estate sites and provide blacklisting/whitelisting functinality.
 
-### Usefull links
+### Useful links
 
-[Local](https://localhost:44386/)
-[Exceptionless](https://be.exceptionless.io/project/5e807acdbd124c0001402914/dashboard)
+[Local](https://localhost:44386/)<br/>
+[Exceptionless](https://be.exceptionless.io/project/5e807acdbd124c0001402914/dashboard)<br/>
+fake error: https://localhost:44386/fakeError
 
 ### Local Setup
 
