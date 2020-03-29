@@ -1,3 +1,4 @@
+using Exceptionless;
 using RealEstateAggregator.Web.Hubs;
 using RealEstateAggregator.Web.Repositories;
 using RealEstateAggregator.Web.Services;
@@ -23,6 +24,7 @@ namespace RealEstateAggregator.Web
         {
             services.AddControllersWithViews();
             services.AddSignalR();
+            services.AddHttpContextAccessor();
             services.AddTransient<IScrappingService, OlxScrappingService>();
             services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
@@ -42,14 +44,13 @@ namespace RealEstateAggregator.Web
             }
             else
             {
-                app.UseExceptionHandler("/Search/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseExceptionless("3yzjMfHLDzsOuZSMo5rRMowX5N9NVpyZncMFhQeT");//
 
             app.UseEndpoints(endpoints =>
             {
