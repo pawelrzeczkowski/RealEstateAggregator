@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using Exceptionless;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -21,16 +22,24 @@ namespace RealEstateAggregator.Web.Services
             {
                 var paging = string.Empty;
                 if (page > 1) paging = $"&page={page}";
-                var url =
-                    $"https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/warszawa/?search%5Bfilter_float_price%3Afrom%5D="
+                var referer = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/warszawa/";
+                var url = $"{referer}?search%5Bfilter_float_price%3Afrom%5D="
                     + $"{searchModel.PriceFrom}&search%5Bfilter_float_price%3Ato%5D={searchModel.PriceTo}&search%5Bfilter_enum_market%5D%5B0%5D=secondary&search%5B"
                     + "filter_enum_rooms%5D%5B0%5D=three&search%5Bfilter_enum_rooms%5D%5B1%5D=five"
                     + "&search%5Bdistrict_id%5D=353" + paging;
 
-                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9");
+                _httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9,pl;q=0.8");
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
+                Thread.Sleep(200);
+
                 var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 20) break;
-                if (!response.IsSuccessStatusCode) break;
+                if (!response.IsSuccessStatusCode)
+                {
+                    ExceptionlessClient.Default.SubmitLog("response status code not 200: " + response.Content.ReadAsStringAsync());
+                    continue;
+                }
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Nie znaleźliśmy ogłoszeń dla tego zapytania.")) continue;
@@ -42,7 +51,7 @@ namespace RealEstateAggregator.Web.Services
 
                 if (nodes == null)
                 {
-                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Olx");
+                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Olx, htmlContent: " + content);
                 }
 
                 foreach (var node in nodes)

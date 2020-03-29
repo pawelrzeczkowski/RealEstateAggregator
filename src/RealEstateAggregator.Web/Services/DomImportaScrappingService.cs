@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using Exceptionless;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -34,12 +35,23 @@ namespace RealEstateAggregator.Web.Services
 
             foreach (var location in locationList)
             {
-                var domImportaUrl = $"https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/{location}?" + 
+                var referer = "https://www.domiporta.pl/mieszkanie/sprzedam/mazowieckie/warszawa/";
+                var domImportaUrl = $"{referer}{location}?" + 
                                     $"Surface.From={searchModel.SurfaceFrom}&Surface.To={searchModel.SurfaceTo}&Price.From={searchModel.PriceFrom}&Price.To={searchModel.PriceTo}" + 
                                     $"&Rooms.From={searchModel.RoomsFrom}&Rooms.To={searchModel.RoomsTo}&PricePerMeter.To={searchModel.PricePerMeterTo}";
 
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9");
+                _httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9,pl;q=0.8");
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
+                Thread.Sleep(200);
+
                 var response = await _httpClient.GetAsync(domImportaUrl);
-                if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
+                if (!response.IsSuccessStatusCode)
+                {
+                    ExceptionlessClient.Default.SubmitLog(
+                        $"response status code not 200: at: {location}, content: {response.Content.ReadAsStringAsync()}");
+                    continue;
+                }
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Znaleziono 0 ogłoszeń")) continue;
@@ -52,7 +64,7 @@ namespace RealEstateAggregator.Web.Services
 
                 if (nodes == null)
                 {
-                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Domimporta");
+                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Domimporta, htmlContent: " + content);
                 }
 
                 foreach (var node in nodes)

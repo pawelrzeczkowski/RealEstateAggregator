@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using Exceptionless;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -33,11 +34,20 @@ namespace RealEstateAggregator.Web.Services
 
             foreach (var location in locationList)
             {
-                var gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
-                    "q=", location, "&pr=", searchModel.PriceFrom, ",", searchModel.PriceTo); // for private only add "&df=ownr&nr=3"
+                var referer = "https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1";
+                var gumtreeUrl = $"{referer}?q={location}&pr={searchModel.PriceFrom},{searchModel.PriceTo}"; // for private only add "&df=ownr&nr=3"
+
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9");
+                _httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9,pl;q=0.8");
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
+                Thread.Sleep(300);
 
                 var response = await _httpClient.GetAsync(gumtreeUrl);
-                if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
+                if (!response.IsSuccessStatusCode)
+                {
+                    ExceptionlessClient.Default.SubmitLog("response status code not 200: " + response.Content.ReadAsStringAsync());
+                    continue;
+                }
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Niestety, nie znaleźliśmy żadnych wyników. Szukając ogłoszeń skorzystaj z poniższych sugestii.")) continue;
@@ -50,7 +60,7 @@ namespace RealEstateAggregator.Web.Services
 
                 if (nodes == null)
                 {
-                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Gumtree");
+                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Gumtree, htmlContent: " + content);
                 }
 
                 foreach (var node in nodes)

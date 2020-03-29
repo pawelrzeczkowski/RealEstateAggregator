@@ -27,10 +27,10 @@ namespace RealEstateAggregator.Web
             services.AddSignalR();
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpClient>();
-            //services.AddTransient<IScrappingService, MorizonScrappingService>();
-            //services.AddTransient<IScrappingService, OtoDomScrappingService>();
-            //services.AddTransient<IScrappingService, OlxScrappingService>();
-            //services.AddTransient<IScrappingService, DomImportaScrappingService>();
+            services.AddTransient<IScrappingService, MorizonScrappingService>();
+            services.AddTransient<IScrappingService, OtoDomScrappingService>();
+            services.AddTransient<IScrappingService, OlxScrappingService>();
+            services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();
             services.AddTransient<IScrappingService, GratkaScrappingService>();
             services.AddTransient<IOfferRepository, OfferRepository>();

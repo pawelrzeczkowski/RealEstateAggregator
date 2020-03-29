@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using Exceptionless;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -26,10 +27,18 @@ namespace RealEstateAggregator.Web.Services
                     + $"&rynek=wtorny&cena-za-m2:max={searchModel.PricePerMeterTo}&powierzchnia-w-m2:min={searchModel.SurfaceFrom}&powierzchnia-w-m2:max={searchModel.SurfaceTo}" 
                     + $"&liczba-pokoi:min={searchModel.RoomsFrom}&liczba-pokoi:max={searchModel.RoomsTo}&pietro:min=3&pietro:max=999";
 
-                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9");
+                _httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9,pl;q=0.8");
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
+                Thread.Sleep(200);
+
                 var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 10) break;
-                if (!response.IsSuccessStatusCode) break;
+                if (!response.IsSuccessStatusCode)
+                {
+                    ExceptionlessClient.Default.SubmitLog("response status code not 200: " + response.Content.ReadAsStringAsync());
+                    continue;
+                }
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (content.Contains("Nie znaleźliśmy tej strony")) break;
@@ -41,7 +50,7 @@ namespace RealEstateAggregator.Web.Services
 
                 if (nodes == null)
                 {
-                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Gratka");
+                    ExceptionlessClient.Default.SubmitLog("incorrect html select node query: Gratka, htmlContent: " + content);
                 }
 
                 foreach (var node in nodes)

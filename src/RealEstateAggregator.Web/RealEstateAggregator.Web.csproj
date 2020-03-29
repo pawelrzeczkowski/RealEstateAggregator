@@ -11,12 +11,12 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.18" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="powershell -ExecutionPolicy Bypass -file PreBuild.ps1" />
+  <!--<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="powershell -ExecutionPolicy Bypass -file BuildEvents\PreBuild.ps1" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="powershell -ExecutionPolicy Bypass -file PostBuild.ps1" />
-  </Target>
+    <Exec Command="powershell -ExecutionPolicy Bypass -file BuildEvents\PostBuild.ps1" />
+  </Target>-->
 
 </Project>
