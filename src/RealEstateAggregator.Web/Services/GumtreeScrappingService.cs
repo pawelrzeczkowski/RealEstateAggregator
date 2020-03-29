@@ -8,7 +8,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class GumtreeScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public GumtreeScrappingService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -30,7 +35,7 @@ namespace RealEstateAggregator.Web.Services
                 var gumtreeUrl = String.Concat("https://www.gumtree.pl/s-mieszkania-i-domy-sprzedam-i-kupie/mokotow/v1c9073l3200012p1?",
                     "q=", location, "&pr=", searchModel.PriceFrom, ",", searchModel.PriceTo); // for private only add "&df=ownr&nr=3"
 
-                var response = await client.GetAsync(gumtreeUrl);
+                var response = await _httpClient.GetAsync(gumtreeUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
                 var content = await response.Content.ReadAsStringAsync();
 

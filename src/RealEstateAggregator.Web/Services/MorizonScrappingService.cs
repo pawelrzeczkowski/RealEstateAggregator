@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -10,7 +7,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class MorizonScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public MorizonScrappingService(HttpClient httpClient)
+        {
+            this._httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -23,8 +25,8 @@ namespace RealEstateAggregator.Web.Services
                     + $"&ps%5Bliving_area_from%5D={searchModel.SurfaceFrom}&ps%5Bliving_area_to%5D={searchModel.SurfaceTo}&ps%5Bnumber_of_rooms_from%5D=" 
                     + $"{searchModel.RoomsFrom}&ps%5Bnumber_of_rooms_to%5D={searchModel.RoomsTo}&ps%5Bhas_parking_places%5D=1&ps%5Bmarket_type%5D%5B0%5D=2" + paging;
 
-                client.DefaultRequestHeaders.Add("Accept", "text/html");
-                var response = await client.GetAsync(url);
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length != url.Length) break;
                 if (!response.IsSuccessStatusCode) break;
                 var content = await response.Content.ReadAsStringAsync();

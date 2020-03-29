@@ -8,7 +8,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class DomImportaScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public DomImportaScrappingService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -32,7 +37,7 @@ namespace RealEstateAggregator.Web.Services
                                     $"Surface.From={searchModel.SurfaceFrom}&Surface.To={searchModel.SurfaceTo}&Price.From={searchModel.PriceFrom}&Price.To={searchModel.PriceTo}" + 
                                     $"&Rooms.From={searchModel.RoomsFrom}&Rooms.To={searchModel.RoomsTo}&PricePerMeter.To={searchModel.PricePerMeterTo}";
 
-                var response = await client.GetAsync(domImportaUrl);
+                var response = await _httpClient.GetAsync(domImportaUrl);
                 if (!response.IsSuccessStatusCode) Console.WriteLine("incorrect URL, skipping...");
                 var content = await response.Content.ReadAsStringAsync();
 

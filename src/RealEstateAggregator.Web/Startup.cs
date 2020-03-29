@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Exceptionless;
 using RealEstateAggregator.Web.Hubs;
 using RealEstateAggregator.Web.Repositories;
@@ -25,6 +26,8 @@ namespace RealEstateAggregator.Web
             services.AddControllersWithViews();
             services.AddSignalR();
             services.AddHttpContextAccessor();
+            services.AddSingleton<HttpClient>();
+
             services.AddTransient<IScrappingService, OlxScrappingService>();
             services.AddTransient<IScrappingService, DomImportaScrappingService>();
             services.AddTransient<IScrappingService, GumtreeScrappingService>();

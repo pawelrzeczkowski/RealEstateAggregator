@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -10,7 +7,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class OlxScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public OlxScrappingService(HttpClient httpClient)
+        {
+            this._httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -24,8 +26,8 @@ namespace RealEstateAggregator.Web.Services
                     + "filter_enum_rooms%5D%5B0%5D=three&search%5Bfilter_enum_rooms%5D%5B1%5D=five"
                     + "&search%5Bdistrict_id%5D=353" + paging;
 
-                client.DefaultRequestHeaders.Add("Accept", "text/html");
-                var response = await client.GetAsync(url);
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 20) break;
                 if (!response.IsSuccessStatusCode) break;
                 var content = await response.Content.ReadAsStringAsync();

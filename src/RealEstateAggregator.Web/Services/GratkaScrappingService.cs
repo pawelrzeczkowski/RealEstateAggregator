@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -10,7 +7,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class GratkaScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public GratkaScrappingService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -23,8 +25,8 @@ namespace RealEstateAggregator.Web.Services
                     + $"&rynek=wtorny&cena-za-m2:max={searchModel.PricePerMeterTo}&powierzchnia-w-m2:min={searchModel.SurfaceFrom}&powierzchnia-w-m2:max={searchModel.SurfaceTo}" 
                     + $"&liczba-pokoi:min={searchModel.RoomsFrom}&liczba-pokoi:max={searchModel.RoomsTo}&pietro:min=3&pietro:max=999";
 
-                client.DefaultRequestHeaders.Add("Accept", "text/html");
-                var response = await client.GetAsync(url);
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 10) break;
                 if (!response.IsSuccessStatusCode) break;
                 var content = await response.Content.ReadAsStringAsync();

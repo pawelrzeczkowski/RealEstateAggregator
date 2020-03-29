@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using RealEstateAggregator.Web.Models;
 using HtmlAgilityPack;
@@ -10,7 +7,12 @@ namespace RealEstateAggregator.Web.Services
 {
     public class OtoDomScrappingService : IScrappingService
     {
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _httpClient;
+
+        public OtoDomScrappingService(HttpClient httpClient)
+        {
+            this._httpClient = httpClient;
+        }
 
         public async IAsyncEnumerable<ResultModel> GetData(SearchModel searchModel)
         {
@@ -29,8 +31,8 @@ namespace RealEstateAggregator.Web.Services
                     + $"=26&locations%5B0%5D%5Bdistrict_id%5D=39&locations%5B1%5D%5Bregion_id%5D=7&locations%5B1%5D%5Bsubregion_id%5D=197&locations%5B1%5D%5Bcity_id%5D=26"
                     + $"&locations%5B1%5D%5Bdistrict_id%5D=7365&nrAdsPerPage=72" + paging;
 
-                client.DefaultRequestHeaders.Add("Accept", "text/html");
-                var response = await client.GetAsync(url);
+                _httpClient.DefaultRequestHeaders.Add("Accept", "text/html");
+                var response = await _httpClient.GetAsync(url);
                 if (response.RequestMessage.RequestUri.ToString().Length < url.Length - 20) break;
                 if (!response.IsSuccessStatusCode) break;
                 var content = await response.Content.ReadAsStringAsync();
