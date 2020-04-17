@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using Exceptionless;
@@ -43,7 +44,8 @@ namespace RealEstateAggregator.Web.Services
                 _httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9");
                 _httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9,pl;q=0.8");
                 _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36");
-                Thread.Sleep(200);
+                Thread.Sleep(300);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
                 var response = await _httpClient.GetAsync(domImportaUrl);
                 if (!response.IsSuccessStatusCode)
@@ -60,7 +62,7 @@ namespace RealEstateAggregator.Web.Services
                 var htmDocument = new HtmlDocument();
                 htmDocument.LoadHtml(content);
                 var nodes = htmDocument.DocumentNode.
-                    SelectNodes("//main/div/div/div/div/div/div[@class='listing__container']/div/ul/li/article");
+                    SelectNodes("//main/div/div/div/div/div/div[@class='listing__container']/div/ul/li/article[@class='sneakpeak']");
 
                 if (nodes == null)
                 {
